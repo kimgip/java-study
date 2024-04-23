@@ -14,4 +14,18 @@ public class Prob03 {
 		printCharArray(c);
 	}
 
+	private static void replaceSpace(char[] a) {
+		for (int i = 0; i < a.length; i++) {
+            if (a[i] == ' ') {
+                a[i] =',';
+            }
+        }
+		
+	}
+
+	private static void printCharArray(char[] a) {
+		System.out.println(a);
+		
+	}
+
 }
