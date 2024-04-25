@@ -1,7 +1,7 @@
 package tv;
 
 public class TV {
-	private int volume;		// range 0 ~ 100 up down으로 범위 초과시 경계값에 머무르기
+	private int volume;		// range 0 ~ 100 up down으로 범위 초과시 라운딩
 	private int channel;	// range 1 ~ 255 up down으로 범위 초과시 라운딩
 	private boolean power;
 	
@@ -31,9 +31,9 @@ public class TV {
 		this.volume = volume;
 		
 		if (volume > 100) {
-			this.volume = 100;
-		} else if (volume < 0) {
 			this.volume = 0;
+		} else if (volume < 0) {
+			this.volume = 100;
 		}
 		
 	}
