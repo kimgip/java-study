@@ -7,6 +7,8 @@ public class Main {
 //		point.setX(10);
 //		point.setY(20);
 		drawPoint(point);
+//		point.disappear();
+		point.show(false);
 	}
 	
 	private static void drawPoint(Point point) {
