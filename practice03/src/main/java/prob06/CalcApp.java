@@ -28,34 +28,22 @@ public class CalcApp {
 			
 			switch( tokens[ 1 ] ) {
 				case "+" : {
-					Add add = new Add();
-					add.setValue( lValue, rValue );
-					int result = add.calculate();
-					System.out.println( ">> " + result );
+					System.out.println( ">> " + calculate(new Add(lValue, rValue)) );
 					
 					break;
 				}
 				case "-" : {
-					Sub sub = new Sub();
-					sub.setValue( lValue, rValue );
-					int result = sub.calculate();
-					System.out.println( ">> " + result );
+					System.out.println( ">> " + calculate(new Sub(lValue, rValue)) );
 					
 					break;
 				}
 				case "*" : {
-					Mul mul = new Mul();
-					mul.setValue( lValue, rValue );
-					int result = mul.calculate();
-					System.out.println( ">> " + result );
+					System.out.println( ">> " + calculate(new Mul(lValue, rValue)) );
 					
 					break;					
 				}
 				case "/" : {
-					Div div = new Div();
-					div.setValue( lValue, rValue );
-					int result = div.calculate();
-					System.out.println( ">> " + result );
+					System.out.println( ">> " + calculate(new Div(lValue, rValue)) );
 					
 					break;
 				}
@@ -67,6 +55,10 @@ public class CalcApp {
 		
 		scanner.close();
 
+	}
+	
+	public static int calculate(Calc c) {		
+		return c.calculate();
 	}
 
 }
