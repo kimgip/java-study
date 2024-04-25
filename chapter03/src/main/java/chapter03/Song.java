@@ -8,6 +8,15 @@ public class Song {
 	private String composer;
 	private String album;
 	
+	public Song(String title, String artist, String composer, String album, int track, int year) {
+		this.title = title;
+		this.artist = artist;
+		this.composer = composer;
+		this.album = album;
+		this.track = track;
+		this.year = year;
+	}
+
 	public int getTrack() {
 		return track;
 	}
