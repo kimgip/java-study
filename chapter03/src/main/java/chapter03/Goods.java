@@ -7,6 +7,17 @@ public class Goods {
 	private int countStock;
 	private int countSold;
 	
+	public Goods(String name, int price, int countStock, int countSold) {
+		// 클래스이름 생략 기능
+		countOfGoods++;
+		
+		// 인스턴스 변수 초기화
+		this.name = name;
+		this.price = price;
+		this.countStock = countStock;
+		this.countSold = countSold;
+	}
+	
 	public Goods() {
 		countOfGoods++;
 	}
