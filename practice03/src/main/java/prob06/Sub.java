@@ -1,14 +1,12 @@
 package prob06;
 
-public class Sub {
-	private int a;
-	private int b;
-	public void setValue(int a, int b) {
-		this.a = a;
-		this.b = b;
+public class Sub extends Calc {
+	public Sub(int a, int b) {
+		super(a, b);
 	}
+
 	
 	public int calculate() {
-		return a - b;
+		return super.getA() - super.getB();
 	}
 }
