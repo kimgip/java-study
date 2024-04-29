@@ -1,30 +1,24 @@
 package prob5_;
 
 public class MyStack  {
-	private int len;
-	private int rsize;
+	private int index;
 	private String[] buffer;
 
 	public MyStack(int i) {
-		len = 0;
-		if (i < 1) {
-			rsize = 1;
-		}
-		rsize = i;
-		buffer = new String[rsize];
+		index = -1;
+		buffer = new String[i];
 	}
 	
 	public String push(String item) {
-		if (len == rsize) {
+		if (index == buffer.length - 1) {
 			resize();
 		}
-		buffer[len] = item;
-        len++;
+		buffer[++index] = item;
         return item;
     }
 	
 	private void resize() {
-		String[] temp = new String[buffer.length + rsize];
+		String[] temp = new String[buffer.length * 2];
 		for (int i = 0; i < buffer.length; i++) {
 			temp[i] = buffer[i];
 		}
@@ -33,24 +27,15 @@ public class MyStack  {
 	}
 	
 	public String pop() throws MyStackException {
-        if (len == 0) 
-        	callException();
+        if (index == 0) 
+        	throw new MyStackException();
         String obj;
-        obj = buffer[len - 1];
-        buffer[len - 1] = null;
-        len--;
+        obj = buffer[index];
+        buffer[index--] = null;
         return obj;
     }
 	
-	private void callException() throws MyStackException {
-		throw new MyStackException();
-	}
-	
 	public boolean isEmpty() {
-		if (len > 0) {
-			return false;
-		} else {
-			return true;
-		}
+		return index == 0;
 	}
 }
