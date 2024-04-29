@@ -20,6 +20,8 @@ public class GoodsApp {
 		System.out.println(Goods.countOfGoods);
 		
 		System.out.println(camera.calcDiscountPrice(0.5f));
+		// object가 부모 클래스이기 때문에 toString 함수가 정의되지 않았으나 에러 X
+		System.out.println(camera.toString());
 	}
 
 }
