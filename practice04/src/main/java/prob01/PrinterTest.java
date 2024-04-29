@@ -10,7 +10,9 @@ public class PrinterTest {
 		printer.println( 5.7 );
 		printer.println( "홍길동" );
 		
-		printer.println(true, 5.7, "홍길동");
+		printer.println(true, 5.7, "홍길동"
+				+ ""
+				+ "");
 		
 		System.out.println(printer.sum(1));
 		System.out.println(printer.sum(1,2,3));

@@ -26,10 +26,6 @@ public class MyStack  {
     }
 	
 	public boolean isEmpty() {
-		if (index > 0) {
-			return false;
-		} else {
-			return true;
-		}
+		return index == 0;
 	}
 }
