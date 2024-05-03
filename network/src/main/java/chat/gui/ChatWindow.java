@@ -20,6 +20,7 @@ import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.Base64;
 
 public class ChatWindow {
 
@@ -104,7 +105,7 @@ public class ChatWindow {
 	}
 	
 	private void sendMessage() {
-		String message = textField.getText();
+		String message = Base64.getEncoder().encodeToString(textField.getText().getBytes());
 		if("".equals(message))
 			return;
 		printWriter.println("MSG:"+message);
@@ -138,10 +139,21 @@ public class ChatWindow {
 		public void run() {
 
 			try {
+				String message = null;
 				while(true) {
-					String message = bufferedReader.readLine();
-					if ("QUIT".equals(message))
+					String flag = bufferedReader.readLine();
+					
+					if ("QUIT".equals(flag))
 						break;
+					
+					if ("MSG".equals(flag)) {
+						String sender = bufferedReader.readLine();
+						message = sender + ": " + new String(Base64.getDecoder().decode(bufferedReader.readLine()));
+					}
+					
+					if ("NOTICE".equals(flag)) {
+						message = bufferedReader.readLine();
+					}
 					updateTextAread(message);
 				}
 			} catch (IOException e) {
