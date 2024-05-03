@@ -1,8 +1,10 @@
 package chat.gui;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.Scanner;
 
 public class ChatClientApp {
-
 	public static void main(String[] args) {
 		String name = null;
 		Scanner scanner = new Scanner(System.in);
@@ -13,7 +15,7 @@ public class ChatClientApp {
 			System.out.print(">>> ");
 			name = scanner.nextLine();
 			
-			if (name.isEmpty() == false ) {
+			if (!name.isEmpty()) {
 				break;
 			}
 			
@@ -21,8 +23,22 @@ public class ChatClientApp {
 		}
 		
 		scanner.close();
-
-		new ChatWindow(name).show();
+		
+		String serverIP = "127.0.0.1";
+		int port = 8080;
+		
+		Socket socket = new Socket();
+		if(args.length > 1) {
+			serverIP = args[0];
+			port = Integer.parseInt(args[1]);
+		}
+			
+		try {
+			socket.connect(new InetSocketAddress(serverIP, port));
+			new ChatWindow(name).show(socket);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

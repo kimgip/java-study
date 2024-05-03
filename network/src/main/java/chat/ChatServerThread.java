@@ -27,7 +27,7 @@ public class ChatServerThread extends Thread {
 		PrintWriter pw = null;
 		try {
 			br = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf-8"));
-			pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "utf-8"));
+			pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "utf-8"), true);
 			
 			InetSocketAddress inetSocketAddress = ( InetSocketAddress )socket.getRemoteSocketAddress();
 			ChatServer.log( "connected from " + inetSocketAddress.getAddress().getHostAddress() + ":" + inetSocketAddress.getPort() );
@@ -46,29 +46,36 @@ public class ChatServerThread extends Thread {
 				switch (tokens[0]) {
 				case "JOIN":
 					doJoin(tokens[1], pw);
+					pw.println("JOIN");
 					break;
 				case "MSG":
 					doMessage(tokens[1]);
 					break;
 				case "QUIT":
-					doQuit(pw);
-					System.out.println("try to remove.");
+					pw.println("QUIT");
 					break;
 				default:
 					ChatServer.log("error: unknown request("+tokens[0]+")");
 				}
 			}
 		}  catch (SocketException e) {
-//			log("Socket Exception: "+e);
-			ChatServer.log("closed by client");
+			ChatServer.log("suddenly closed by client");
 			doQuit(pw);
 		} catch(IOException e) {
 			ChatServer.log("error: "+e);
+		} finally {
+			if(socket != null & !socket.isClosed()){
+				try {
+					socket.close();
+				} catch (IOException e) {
+					ChatServer.log("error: "+e);
+				}
+			}
 		}
 	}
 
-	private void doQuit(Writer w) {
-		removeWriter(w);
+	private void doQuit(PrintWriter pw) {
+		removeWriter(pw);
 		
 		broadcast(nickName +"님이 퇴장하였습니다.");
 	}
@@ -88,10 +95,6 @@ public class ChatServerThread extends Thread {
 		
 		// writer pool에 저장
 		addWriter(pw);
-		
-		// ack
-		pw.println("JOIN:OK");
-		pw.flush();
 	}
 
 	private void addWriter(PrintWriter pw) {
@@ -102,9 +105,8 @@ public class ChatServerThread extends Thread {
 	
 	private void broadcast(String data) {
 		for(Writer w: writerPool) {
-			PrintWriter pw = (PrintWriter)w;
-			pw.println(data);
-			pw.flush();
+			PrintWriter p = (PrintWriter)w;
+			p.println(data);
 		}
 	}
 	

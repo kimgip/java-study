@@ -32,9 +32,7 @@ public class ChatServer {
 				if(serverSocket != null & serverSocket.isClosed()){
 					serverSocket.close();
 				}
-				if(socket != null & !socket.isClosed()){
-					socket.close();
-				}
+				
 			} catch(IOException e) {
 				log("error: "+e);
 			}

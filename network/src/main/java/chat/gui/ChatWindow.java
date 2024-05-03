@@ -13,7 +13,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
 
 public class ChatWindow {
 
@@ -22,6 +28,10 @@ public class ChatWindow {
 	private Button buttonSend;
 	private TextField textField;
 	private TextArea textArea;
+	
+	private String name;
+	private PrintWriter printWriter;
+	private BufferedReader bufferedReader;
 
 	public ChatWindow(String name) {
 		frame = new Frame(name);
@@ -29,10 +39,10 @@ public class ChatWindow {
 		buttonSend = new Button("Send");
 		textField = new TextField();
 		textArea = new TextArea(30, 80);
-		
+		this.name = name;
 	}
 
-	public void show() {
+	public void show(Socket socket) {
 		// Button
 		buttonSend.setBackground(Color.GRAY);
 		buttonSend.setForeground(Color.WHITE);
@@ -68,7 +78,7 @@ public class ChatWindow {
 		// Frame
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				System.exit(0);
+				finish(socket);
 			}
 		});
 		frame.setVisible(true);
@@ -76,6 +86,20 @@ public class ChatWindow {
 		
 		// IOSTream 받아오기
 		// ChatClientThread 생성
+		try {
+			printWriter = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
+			bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			
+			printWriter.println("JOIN:"+name);
+			String joinResponse = bufferedReader.readLine();
+
+			if("JOIN".equals(joinResponse)) {
+				new chatClientThread().start();
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 	}
 	
@@ -83,7 +107,7 @@ public class ChatWindow {
 		String message = textField.getText();
 		if("".equals(message))
 			return;
-		System.out.println("메세지 보내는 프로토콜:"+message+"<<");
+		printWriter.println("MSG:"+message);
 		
 		textField.setText("");
 		textField.requestFocus();
@@ -93,19 +117,37 @@ public class ChatWindow {
 		textArea.append(message);
 		textArea.append("\n");
 	}
-
-	private class chatClientThread extends Thread {
-		private BufferedReader br;
+	
+	private void finish(Socket socket) {
+		// quit protocol 구현
+		printWriter.println("QUIT");
 		
-		public chatClientThread(BufferedReader br) {
-			this.br = br;
+		try {
+			socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+
+		// exit java application
+		System.exit(0);
+	}
+
+	private class chatClientThread extends Thread {		
+		public chatClientThread() {}
 		
 		public void run() {
-			while(true) {
-//				String message = br.readline();
-				updateTextAread("마이콜: ");
+
+			try {
+				while(true) {
+					String message = bufferedReader.readLine();
+					if ("QUIT".equals(message))
+						break;
+					updateTextAread(message);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
+				
 		}
 	}
 }
