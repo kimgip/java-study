@@ -45,13 +45,13 @@ public class ChatServerThread extends Thread {
 				switch (tokens[0]) {
 				case "JOIN":
 					doJoin(tokens[1], pw);
-					pw.println("JOIN");
+					pw.println("JOIN:OK");
 					break;
 				case "MSG":
 					doMessage(tokens[1]);
 					break;
 				case "QUIT":
-					pw.println("QUIT");
+					pw.println("QUIT:OK");
 					break;
 				default:
 					ChatServer.log("error: unknown request("+tokens[0]+")");
@@ -75,7 +75,7 @@ public class ChatServerThread extends Thread {
 
 	private void doQuit(PrintWriter pw) {
 		removeWriter(pw);
-		broadcast("NOTICE\n"+nickName +"님이 퇴장하였습니다.");
+		broadcast("NOTICE:"+nickName +"님이 퇴장하였습니다.");
 	}
 
 	private void removeWriter(Writer w) {
@@ -83,12 +83,12 @@ public class ChatServerThread extends Thread {
 	}
 
 	private void doMessage(String message) {
-		broadcast("MSG\n"+nickName+"\n"+message);
+		broadcast("MSG:"+nickName+":"+message);
 	}
 
 	private void doJoin(String nickName, PrintWriter pw) {
 		this.nickName = nickName;
-		broadcast("NOTICE\n"+nickName+"님이 입장하셨습니다.");
+		broadcast("NOTICE:"+nickName+"님이 입장하셨습니다.");
 		
 		// writer pool에 저장
 		addWriter(pw);

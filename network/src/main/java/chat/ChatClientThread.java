@@ -15,20 +15,20 @@ public class ChatClientThread extends Thread {
 		try {
 			String message = null;
 			while(true) {
-				String flag = br.readLine();
+				String response = br.readLine();
+				String[] tokens = response.split(":");
 				
-				if ("QUIT".equals(flag)) {
+				if ("QUIT".equals(tokens[0]) & "OK".equals(tokens[1])) {
 					ChatClient.log("quit");
 					break;
 				}
 				
-				if ("MSG".equals(flag)) {
-					String sender = br.readLine();
-					message = sender + ": " + br.readLine();
+				if ("MSG".equals(tokens[0])) {
+					message = tokens[1] + ": " + tokens[2];
 				}
 				
-				if ("NOTICE".equals(flag)) {
-					message = br.readLine();
+				if ("NOTICE".equals(tokens[0])) {
+					message = tokens[1];
 				}
 				
 				System.out.println(message);

@@ -22,6 +22,8 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.Base64;
 
+import chat.ChatClient;
+
 public class ChatWindow {
 
 	private Frame frame;
@@ -93,8 +95,8 @@ public class ChatWindow {
 			
 			printWriter.println("JOIN:"+name);
 			String joinResponse = bufferedReader.readLine();
-
-			if("JOIN".equals(joinResponse)) {
+			String[] tokens = joinResponse.split(":");
+			if("JOIN".equals(tokens[0]) & "OK".equals(tokens[1])) {
 				new chatClientThread().start();
 			}
 			
@@ -141,19 +143,21 @@ public class ChatWindow {
 			try {
 				String message = null;
 				while(true) {
-					String flag = bufferedReader.readLine();
+					String response = bufferedReader.readLine();
+					String[] tokens = response.split(":");
 					
-					if ("QUIT".equals(flag))
+					if ("QUIT".equals(tokens[0]) & "OK".equals(tokens[1])) {
 						break;
-					
-					if ("MSG".equals(flag)) {
-						String sender = bufferedReader.readLine();
-						message = sender + ": " + new String(Base64.getDecoder().decode(bufferedReader.readLine()));
 					}
 					
-					if ("NOTICE".equals(flag)) {
-						message = bufferedReader.readLine();
+					if ("MSG".equals(tokens[0])) {
+						message = tokens[1] + ": " + new String(Base64.getDecoder().decode(tokens[2]));
 					}
+					
+					if ("NOTICE".equals(tokens[0])) {
+						message = tokens[1];
+					}
+					
 					updateTextAread(message);
 				}
 			} catch (IOException e) {

@@ -42,7 +42,7 @@ public class ChatClient {
 			if(res != null) {
 				// join res
 				String[] tokens = res.split(":");
-				if("JOIN".equals(tokens[0])) {
+				if("JOIN".equals(tokens[0]) & "OK".equals(tokens[1])) {
 					log("join");
 					System.out.println(nickname+"님 환영합니다.");
 					
