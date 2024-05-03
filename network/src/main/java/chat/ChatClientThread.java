@@ -13,13 +13,24 @@ public class ChatClientThread extends Thread {
 	@Override
 	public void run() {
 		try {
+			String message = null;
 			while(true) {
-				String message = br.readLine();
+				String flag = br.readLine();
 				
-				if("QUIT".equals(message)) {
+				if ("QUIT".equals(flag)) {
 					ChatClient.log("quit");
 					break;
-				}	
+				}
+				
+				if ("MSG".equals(flag)) {
+					String sender = br.readLine();
+					message = sender + ": " + br.readLine();
+				}
+				
+				if ("NOTICE".equals(flag)) {
+					message = br.readLine();
+				}
+				
 				System.out.println(message);
 			}
 		} catch (IOException e) {
