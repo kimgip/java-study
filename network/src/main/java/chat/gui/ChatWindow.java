@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
@@ -107,7 +108,12 @@ public class ChatWindow {
 	}
 	
 	private void sendMessage() {
-		String message = Base64.getEncoder().encodeToString(textField.getText().getBytes());
+		String message = null;
+		try {
+			message = Base64.getEncoder().encodeToString(textField.getText().getBytes("utf-8"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		if("".equals(message))
 			return;
 		printWriter.println("MSG:"+message);
@@ -151,7 +157,7 @@ public class ChatWindow {
 					}
 					
 					if ("MSG".equals(tokens[0])) {
-						message = tokens[1] + ": " + new String(Base64.getDecoder().decode(tokens[2]));
+						message = tokens[1] + ": " + new String(Base64.getDecoder().decode(tokens[2]), "utf-8");
 					}
 					
 					if ("NOTICE".equals(tokens[0])) {
