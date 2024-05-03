@@ -42,7 +42,6 @@ public class ChatServerThread extends Thread {
 			
 				// protocol 분석
 				String[] tokens = request.split(":"); // 추가 미션: base64 encoding 이용
-				
 				switch (tokens[0]) {
 				case "JOIN":
 					doJoin(tokens[1], pw);
@@ -76,8 +75,7 @@ public class ChatServerThread extends Thread {
 
 	private void doQuit(PrintWriter pw) {
 		removeWriter(pw);
-		
-		broadcast(nickName +"님이 퇴장하였습니다.");
+		broadcast("NOTICE\n"+nickName +"님이 퇴장하였습니다.");
 	}
 
 	private void removeWriter(Writer w) {
@@ -85,13 +83,12 @@ public class ChatServerThread extends Thread {
 	}
 
 	private void doMessage(String message) {
-		broadcast(nickName+":"+message);
+		broadcast("MSG\n"+nickName+"\n"+message);
 	}
 
 	private void doJoin(String nickName, PrintWriter pw) {
 		this.nickName = nickName;
-		
-		broadcast(this.nickName+"님이 입장하셨습니다.");
+		broadcast("NOTICE\n"+nickName+"님이 입장하셨습니다.");
 		
 		// writer pool에 저장
 		addWriter(pw);
